@@ -11,6 +11,13 @@
             "Maslennikov\\LaravelActions\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Maslennikov\\LaravelActions\\LaravelActionsServiceProvider"
+            ]
+        }
+    },
     "authors": [
         {
             "name": "Yuriy Maslennikov",
