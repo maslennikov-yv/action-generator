@@ -1,0 +1,20 @@
+{
+    "name": "maslennikov-yv/action-genarator",
+    "type": "library",
+    "require": {
+        "php": "^8.1|^8.2",
+        "illuminate/console": "^10.48",
+        "illuminate/support": "^10.48"
+    },
+    "autoload": {
+        "psr-4": {
+            "Maslennikov\\LaravelActions\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yuriy Maslennikov",
+            "email": "masslennikovyv@gmail.com"
+        }
+    ]
+}
