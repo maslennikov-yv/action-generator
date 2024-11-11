@@ -11,7 +11,7 @@ class ActionMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'app:test';
+    protected $signature = 'app:test {name}';
 
     /**
      * The console command description.
