@@ -22,6 +22,6 @@ class ActionMakeCommand extends GeneratorCommand
 
     protected function getStub()
     {
-        return __DIR__ . '/stubs/test.stub';
+        return __DIR__ . '/../stubs/test.stub';
     }
 }
