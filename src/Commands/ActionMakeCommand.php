@@ -2,16 +2,16 @@
 
 namespace Maslennikov\LaravelActions\Commands;
 
-use Illuminate\Console\GeneratorCommand;
+use Illuminate\Console\Command;
 
-class ActionMakeCommand extends GeneratorCommand
+class ActionMakeCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:test {name}';
+    protected $signature = 'make:action {name} {--force} {--test}';
 
     /**
      * The console command description.
@@ -20,8 +20,12 @@ class ActionMakeCommand extends GeneratorCommand
      */
     protected $description = 'Command description';
 
-    protected function getStub()
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
-        return __DIR__ . '/../stubs/test.stub';
+        $name = $this->argument('name');
+        $this->comment($name);
     }
 }

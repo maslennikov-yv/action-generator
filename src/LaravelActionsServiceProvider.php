@@ -3,15 +3,19 @@
 namespace Maslennikov\LaravelActions;
 
 use Illuminate\Support\ServiceProvider;
-use Maslennikov\LaravelActions\Commands\ActionMakeCommand;
 
 class LaravelActionsServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/config.php' => config_path('action.php'),
+            ], 'config');
+
             $this->commands([
-                ActionMakeCommand::class,
+                Commands\ActionStubsPublishCommand::class,
+                Commands\ActionMakeCommand::class,
             ]);
         }
     }

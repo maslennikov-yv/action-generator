@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+//use
+
+class {{class}} implements {{interface}}
+{
+    public function __invoke({{data}} $data)
+    {
+        return {{model}}::query()
+            ->paginate();
+    }
+}
