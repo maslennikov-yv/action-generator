@@ -51,7 +51,7 @@ class ActionMakeCommand extends GeneratorCommand
         return $this->args;
     }
 
-    protected function getStub()
+    protected function getStub(): bool|string
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
             $special = $stubsPath . '/action.' . Str::snake($this->getVerb()) . '.stub';
@@ -67,7 +67,7 @@ class ActionMakeCommand extends GeneratorCommand
         return realpath(__DIR__ . '/../stubs/action.stub');
     }
 
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $stub = $this->files->get($this->getStub());
         return $this->injectImport($this->getDataNamespace(), $stub, '{{data}}')
@@ -90,8 +90,10 @@ class ActionMakeCommand extends GeneratorCommand
         $this->args = $this->parseName($name);
 
         if (parent::handle() === false && !$this->option('force')) {
-            return false;
+            return self::FAILURE;
         }
+
+        return self::SUCCESS;
     }
 
     protected function getNameInput(): string
@@ -101,23 +103,13 @@ class ActionMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace .
-            $this->makeNamespace([
-                'Actions',
-                ...$this->getDirs(),
-                $this->getPlural(),
-            ]);
+        return $rootNamespace . '\\Actions\\' . $this->getFolder();
     }
 
-    protected function getPath($name): string
+    protected function getPath($name)
     {
-        return $this->laravel['path'] .
-            $this->makeFolder([
-                'Actions',
-                ...$this->getDirs(),
-                $this->getPlural(),
-                $this->getNameInput(),
-            ]) . '.php';
+        return $this->laravel['path'] . '/' . 'Actions' . '/' . $this->getFolder() . '/' . $this->getNameInput(
+            ) . '.php';
     }
 
     protected function getOptions(): array
@@ -140,10 +132,9 @@ class ActionMakeCommand extends GeneratorCommand
         $action = $name;
         if ($delimiter) {
             $action = Str::afterLast($name, $delimiter);
-            $dirs = preg_split("|$delimiter|", Str::chopEnd($name, $delimiter . $action));
+            $dirs = explode($delimiter, Str::chopEnd($name, $delimiter . $action));
         }
 
-        $verb = $third = $single = $plural = null;
         if (Str::doesntContain($action, ['{', '}'])) {
             if (Str::contains($action, ':')) {
                 $this->error('Syntax error near symbol ":"');
@@ -186,7 +177,7 @@ class ActionMakeCommand extends GeneratorCommand
 
     private function parseExpression(string $expression, callable $cb)
     {
-        $parts = preg_split("/:/", $expression);
+        $parts = explode(':', $expression);
         if (count($parts) === 1) {
             $first = array_shift($parts);
             $second = $cb($first);
@@ -200,7 +191,7 @@ class ActionMakeCommand extends GeneratorCommand
         return [$first, $second];
     }
 
-    private function thirdPerson($verb)
+    private function thirdPerson($verb): string
     {
         if (Str::endsWith($verb, 'y')) {
             return Str::replaceMatches('/y$/', 'ies', $verb);
