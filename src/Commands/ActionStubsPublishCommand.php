@@ -12,7 +12,7 @@ class ActionStubsPublishCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'stub:publish
+    protected $signature = 'action:stub:publish
                     {--existing : Publish and overwrite only the files that have already been published}
                     {--force : Overwrite any existing files}';
 
