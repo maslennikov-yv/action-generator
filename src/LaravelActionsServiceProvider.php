@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions;
 
 use Illuminate\Support\ServiceProvider;

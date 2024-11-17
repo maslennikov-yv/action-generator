@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\Command;
@@ -41,11 +43,19 @@ class ActionStubsPublishCommand extends Command
             realpath(__DIR__ . '/../stubs/action.show.stub') => 'action.show.stub',
             realpath(__DIR__ . '/../stubs/action.update.stub') => 'action.update.stub',
             // action.controller
-            realpath(__DIR__ . '/../stubs/action.controller.dataset.destroy.stub') => 'action.controller.dataset.destroy.stub',
-            realpath(__DIR__ . '/../stubs/action.controller.dataset.show.stub') => 'action.controller.dataset.show.stub',
-            realpath(__DIR__ . '/../stubs/action.controller.dataset.store.stub') => 'action.controller.dataset.store.stub',
+            realpath(
+                __DIR__ . '/../stubs/action.controller.dataset.destroy.stub'
+            ) => 'action.controller.dataset.destroy.stub',
+            realpath(
+                __DIR__ . '/../stubs/action.controller.dataset.show.stub'
+            ) => 'action.controller.dataset.show.stub',
+            realpath(
+                __DIR__ . '/../stubs/action.controller.dataset.store.stub'
+            ) => 'action.controller.dataset.store.stub',
             realpath(__DIR__ . '/../stubs/action.controller.dataset.stub') => 'action.controller.dataset.stub',
-            realpath(__DIR__ . '/../stubs/action.controller.dataset.update.stub') => 'action.controller.dataset.update.stub',
+            realpath(
+                __DIR__ . '/../stubs/action.controller.dataset.update.stub'
+            ) => 'action.controller.dataset.update.stub',
             realpath(__DIR__ . '/../stubs/action.controller.stub') => 'action.controller.stub',
             realpath(__DIR__ . '/../stubs/action.controller.test.stub') => 'action.controller.test.stub',
             // action.data

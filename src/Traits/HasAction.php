@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Traits;
 
 use Illuminate\Support\Str;

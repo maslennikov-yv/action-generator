@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
@@ -99,13 +101,23 @@ class ActionMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '\\Actions\\' . $this->getFolder();
+        return $rootNamespace .
+            $this->makeNamespace([
+                'Actions',
+                ...$this->getDirs(),
+                $this->getPlural(),
+            ]);
     }
 
-    protected function getPath($name)
+    protected function getPath($name): string
     {
-        return $this->laravel['path'] . '/' . 'Actions' . '/' . $this->getFolder() . '/' . $this->getNameInput(
-            ) . '.php';
+        return $this->laravel['path'] .
+            $this->makeFolder([
+                'Actions',
+                ...$this->getDirs(),
+                $this->getPlural(),
+                $this->getNameInput(),
+            ]) . '.php';
     }
 
     protected function getOptions(): array
