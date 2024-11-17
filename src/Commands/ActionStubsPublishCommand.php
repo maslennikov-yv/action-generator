@@ -35,6 +35,8 @@ class ActionStubsPublishCommand extends Command
         }
 
         $stubs = [
+            // action.interface
+            realpath(__DIR__ . '/../stubs/action.interface.stub') => 'action.interface.stub',
             // action
             realpath(__DIR__ . '/../stubs/action.stub') => 'action.stub',
             realpath(__DIR__ . '/../stubs/action.create.stub') => 'action.create.stub',
