@@ -108,8 +108,7 @@ class ActionMakeCommand extends GeneratorCommand
 
     protected function getPath($name)
     {
-        return $this->laravel['path'] . '/' . 'Actions' . '/' . $this->getFolder() . '/' . $this->getNameInput(
-            ) . '.php';
+        return $this->laravel['path'] . '/Actions/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }
 
     protected function getOptions(): array
