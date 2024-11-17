@@ -14,7 +14,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:action {name} {--force}';
+    protected $signature = 'make:action:interface {name} {--force}';
 
     /**
      * The console command description.
