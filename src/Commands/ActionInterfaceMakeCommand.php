@@ -67,6 +67,8 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
 
     protected function buildClass($name)
     {
+        $stub = $this->files->get($this->getStub());
+
         return $this->replaceNamespace($stub, $name)
             ->replaceDataQualifiedName($stub)
             ->replaceData($stub)
