@@ -1,0 +1,113 @@
+<?php
+
+declare(strict_types=1);
+
+use {{index_data_qualified_name}};
+use {{store_data_qualified_name}};
+use {{show_data_qualified_name}};
+use {{update_data_qualified_name}};
+use {{destroy_data_qualified_name}};
+use App\Models\User;
+use Database\Seeders\UserSeeder;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+uses(DatabaseTransactions::class);
+
+beforeEach(function () {
+    (new UserSeeder(3))->run();
+});
+
+it('can call {{controller_name}} index', function ({{index_data}} $data) {
+
+    $user = User::query()
+        ->inRandomOrder()
+        ->firstOrFail();
+
+    $response = $this->actingAs($user, 'api')->getJson(route('{{index_route}}'));
+
+    expect($response->status())
+        ->toEqual(200)
+    ;
+})
+    ->with('{{index_dataset}}')
+;
+
+it('can call {{controller_name}} show', function ({{show_data}} $data) {
+
+    $user = User::query()
+        ->inRandomOrder()
+        ->firstOrFail();
+
+    $response = $this->actingAs($user, 'api')->getJson(
+        route('{{show_route}}',
+        [
+            '{{modelKeyRoute}}' => $data->{{modelKeyName}},
+        ]
+    ));
+
+    expect($response->status())
+        ->toEqual(200)
+    ;
+})
+    ->with('{{show_dataset}}')
+;
+
+it('can call {{controller_name}} store', function ({{store_data}} $data) {
+
+    $user = User::query()
+        ->inRandomOrder()
+        ->firstOrFail();
+
+    $response = $this->actingAs($user, 'api')->postJson(
+        route('{{store_route}}'),
+        [
+            //
+        ]
+    );
+
+    expect($response->status())
+        ->toEqual(201)
+    ;
+})
+    ->with('{{store_dataset}}')
+;
+
+it('can call {{controller_name}} update', function ({{update_data}} $data) {
+
+    $user = User::query()
+        ->inRandomOrder()
+        ->firstOrFail();
+
+    $response = $this->actingAs($user, 'api')->putJson(
+        route('{{update_route}}', [
+            '{{modelKeyRoute}}' => $data->{{modelKeyName}},
+        ]), [
+            //
+        ]
+    );
+
+    expect($response->status())
+        ->toEqual(200)
+    ;
+})
+    ->with('{{update_dataset}}')
+;
+
+it('can call {{controller_name}} delete', function ({{destroy_data}} $data) {
+
+    $user = User::query()
+        ->inRandomOrder()
+        ->firstOrFail();
+
+    $response = $this->actingAs($user, 'api')->deleteJson(
+        route('{{destroy_route}}', [
+            '{{modelKeyRoute}}' => $data->{{modelKeyName}},
+        ])
+    );
+
+    expect($response->status())
+        ->toEqual(204)
+    ;
+})
+    ->with('{{destroy_dataset}}')
+;

@@ -1,0 +1,8 @@
+//
+dataset('{{key}}', function () {
+    yield 'one' => function () {
+        return {{data}}::from({{model}}::factory()->raw([
+            //
+        ]));
+    };
+});

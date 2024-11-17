@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use {{dataQualifiedName}};
+
+interface {{class}}
+{
+    public function __invoke({{data}} $data);
+}

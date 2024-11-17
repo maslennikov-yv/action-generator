@@ -1,0 +1,97 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use App\Http\Controllers\Controller;
+use {{model_qualified_name}};
+use {{resource_qualified_name}};
+use {{index_request_qualified_name}};
+use {{store_request_qualified_name}};
+use {{show_request_qualified_name}};
+use {{update_request_qualified_name}};
+use {{destroy_request_qualified_name}};
+use {{index_interface_qualified_name}};
+use {{store_interface_qualified_name}};
+use {{show_interface_qualified_name}};
+use {{update_interface_qualified_name}};
+use {{destroy_interface_qualified_name}};
+use {{index_data_qualified_name}};
+use {{store_data_qualified_name}};
+use {{show_data_qualified_name}};
+use {{update_data_qualified_name}};
+use {{destroy_data_qualified_name}};
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Response;
+
+class {{class}} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(IndexRequest $request, {{index_interface}} $action): ResourceCollection
+    {
+        $data = {{index_data}}::from([
+            //
+        ]);
+
+        return {{resource}}::collection($action($data));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @throws UnknownProperties
+     */
+    public function store(StoreRequest $request, {{store_interface}} $action): {{resource}}
+    {
+        $data = {{store_data}}::from($request->validated());
+
+        return {{resource}}::make($action($data));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @throws UnknownProperties
+     */
+    public function show(ShowRequest $request, {{show_interface}} $action, string $id): {{resource}}
+    {
+        $data = {{show_data}}::from([
+            '{{modelKeyName}}' => $id,
+        ]);
+
+        return {{resource}}::make($action($data));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @throws UnknownProperties
+     */
+    public function update(UpdateRequest $request, {{update_interface}} $action, string $id): {{resource}}
+    {
+        $data = {{update_data}}::from([
+            '{{modelKeyName}}' => $id,
+        ] + $request->validated());
+
+        return {{resource}}::make($action($data));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @throws UnknownProperties
+     */
+    public function destroy(DestroyRequest $request, {{destroy_interface}} $action, string $id): Response
+    {
+        $data = {{destroy_data}}::from([
+            '{{modelKeyName}}' => $id,
+        ]);
+
+        $action($data);
+
+        return response()->noContent();
+    }
+}

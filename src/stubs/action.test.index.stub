@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+//use
+use Database\Seeders\UserSeeder;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+uses(DatabaseTransactions::class);
+
+beforeEach(function () {
+    (new UserSeeder(3))->run();
+});
+
+it('{{title}}', function ({{data}} $data) {
+    $result = app({{action}}::class)($data);
+
+    expect($result)
+        ->toBeInstanceOf(LengthAwarePaginator::class)
+    ;
+})
+    ->with('{{dataset}}')
+;

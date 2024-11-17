@@ -1,0 +1,8 @@
+//
+dataset('{{key}}', function () {
+    yield 'one' => function () {
+        return {{data}}::from([
+            '{{modelKeyName}}' => {{model}}::query()->inRandomOrder()->firstOrFail()->getKey(),
+        ]);
+    };
+});
