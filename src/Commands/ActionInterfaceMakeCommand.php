@@ -48,7 +48,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
-            $published = $stubsPath . '/action.stub';
+            $published = $stubsPath . '/action.interface.stub';
             if (file_exists($published)) {
                 return $published;
             }
