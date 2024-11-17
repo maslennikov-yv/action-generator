@@ -34,11 +34,11 @@ class ActionStubsPublishCommand extends Command
 
         $stubs = [
             realpath(__DIR__ . '/../stubs/action.stub') => 'action.stub',
-            realpath(__DIR__ . '/../stubs/action.create.stub') => 'action_create.stub',
-            realpath(__DIR__ . '/../stubs/action.destroy.stub') => 'action_destroy.stub',
-            realpath(__DIR__ . '/../stubs/action.index.stub') => 'action_index.stub',
-            realpath(__DIR__ . '/../stubs/action.show.stub') => 'action_show.stub',
-            realpath(__DIR__ . '/../stubs/action.update.stub') => 'action_update.stub',
+            realpath(__DIR__ . '/../stubs/action.create.stub') => 'action.create.stub',
+            realpath(__DIR__ . '/../stubs/action.destroy.stub') => 'action.destroy.stub',
+            realpath(__DIR__ . '/../stubs/action.index.stub') => 'action.index.stub',
+            realpath(__DIR__ . '/../stubs/action.show.stub') => 'action.show.stub',
+            realpath(__DIR__ . '/../stubs/action.update.stub') => 'action.update.stub',
         ];
 
         foreach ($stubs as $from => $to) {
