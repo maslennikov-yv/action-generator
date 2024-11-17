@@ -57,11 +57,16 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
         return __DIR__ . '/../stubs/interface.stub';
     }
 
+    public function handle()
+    {
+        $name = $this->argument('name');
+        $this->args = $this->parseName($name);
+
+        return parent::handle();
+    }
+
     protected function buildClass($name)
     {
-        $this->args = $this->parseName($this->argument('name'));
-        $stub = $this->files->get($this->getStub());
-
         return $this->replaceNamespace($stub, $name)
             ->replaceDataQualifiedName($stub)
             ->replaceData($stub)
