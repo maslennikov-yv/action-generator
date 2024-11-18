@@ -93,7 +93,26 @@ class ActionMakeCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
+        $this->createData();
+        $this->createInterface();
+
         return self::SUCCESS;
+    }
+
+    protected function createData()
+    {
+        $this->call('make:action:data', [
+            'name' => $this->argument('name'),
+            '--force' => (bool)$this->option('force'),
+        ]);
+    }
+
+    protected function createInterface()
+    {
+        $this->call('make:action:interface', [
+            'name' => $this->argument('name'),
+            '--force' => (bool)$this->option('force'),
+        ]);
     }
 
     protected function getNameInput(): string
