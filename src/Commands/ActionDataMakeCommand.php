@@ -63,6 +63,14 @@ class ActionDataMakeCommand extends GeneratorCommand
         return __DIR__ . '/../stubs/action.data.stub';
     }
 
+    public function handle()
+    {
+        $name = $this->argument('name');
+        $this->args = $this->parseName($name);
+
+        return parent::handle();
+    }
+
     protected function buildClass($name)
     {
         $stub = $this->files->get($this->getStub());
