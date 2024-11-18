@@ -81,16 +81,11 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
             $this->laravel->getNamespace() .
             'Data' . '\\' .
             $this->getFolder() . '\\' .
-            $this->getModelName() . 'Data';
+            $this->getVerb() . $this->getModel() . 'Data';
 
         $stub = str_replace('{{dataQualifiedName}}', $dataQualifiedName, $stub);
 
         return $this;
-    }
-
-    protected function getModelName(): string
-    {
-        return $this->getVerb() . $this->getModel();
     }
 
     protected function getNameInput(): string
