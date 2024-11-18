@@ -80,7 +80,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
         $dataQualifiedName =
             $this->laravel->getNamespace() .
             'Data' . '\\' .
-            $this->getFolder() . '\\' .
+            $this->getFolderNamespace() . '\\' .
             $this->getVerb() . $this->getSingle() . 'Data';
 
         $stub = str_replace('{{dataQualifiedName}}', $dataQualifiedName, $stub);
