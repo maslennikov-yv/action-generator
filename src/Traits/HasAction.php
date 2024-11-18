@@ -10,12 +10,12 @@ trait HasAction
 {
     protected function getAction(): string
     {
-        return $this->getVerb() . $this->getModel();
+        return $this->getVerb() . $this->getSingle();
     }
 
     protected function getInterface(): string
     {
-        return $this->getThird() . $this->getModel();
+        return $this->getThird() . $this->getSingle();
     }
 
     protected function getInterfaceNamespace(): string
@@ -39,7 +39,7 @@ trait HasAction
 
     protected function getDataName(): string
     {
-        return $this->getVerb() . $this->getModel() . 'Data';
+        return $this->getVerb() . $this->getSingle() . 'Data';
     }
 
     protected function getDataNamespace(): string
@@ -60,7 +60,7 @@ trait HasAction
         return $this;
     }
 
-    protected function getModel(): string
+    protected function getSingle(): string
     {
         return trim($this->getArgs('single'));
     }
@@ -71,20 +71,20 @@ trait HasAction
             $this->makeNamespace([
                 'Models',
                 ...$this->getDirs(),
-                $this->getModel(),
+                $this->getSingle(),
             ]);
     }
 
     protected function replaceModel(&$stub): static
     {
-        $stub = str_replace('{{model}}', $this->getModel(), $stub);
+        $stub = str_replace('{{model}}', $this->getSingle(), $stub);
 
         return $this;
     }
 
     protected function getModelKeyName(): string
     {
-        return Str::snake($this->getModel()) . '_id';
+        return Str::snake($this->getSingle()) . '_id';
     }
 
     protected function replaceId(&$stub): static

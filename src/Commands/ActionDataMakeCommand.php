@@ -3,9 +3,10 @@
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Str;
 use Maslennikov\LaravelActions\Traits\HasAction;
 
-class ActionInterfaceMakeCommand extends GeneratorCommand
+class ActionDataMakeCommand extends GeneratorCommand
 {
     use HasAction;
 
@@ -14,21 +15,21 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:action:interface {name} {--force}';
+    protected $signature = 'make:action:data {name} {--force}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new Interface for Action';
+    protected $description = 'Create a new Data for Action';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Interface';
+    protected $type = 'Data';
 
     /**
      * Args of action
@@ -48,21 +49,18 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
-            $published = $stubsPath . '/action.interface.stub';
+            $special = $stubsPath . '/action.data.' . Str::snake($this->getVerb()) . '.stub';
+            if (file_exists($special)) {
+                return $special;
+            }
+
+            $published = $stubsPath . '/action.data.stub';
             if (file_exists($published)) {
                 return $published;
             }
         }
 
-        return __DIR__ . '/../stubs/action.interface.stub';
-    }
-
-    public function handle()
-    {
-        $name = $this->argument('name');
-        $this->args = $this->parseName($name);
-
-        return parent::handle();
+        return __DIR__ . '/../stubs/action.data.stub';
     }
 
     protected function buildClass($name)
@@ -70,37 +68,37 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
         $stub = $this->files->get($this->getStub());
 
         return $this->replaceNamespace($stub, $name)
-            ->replaceDataQualifiedName($stub)
-            ->replaceData($stub)
+            ->replaceVars($stub)
             ->replaceClass($stub, $name);
     }
 
-    protected function replaceDataQualifiedName(&$stub): static
+    protected function replaceVars(&$stub)
     {
-        $dataQualifiedName =
-            $this->laravel->getNamespace() .
-            'Data' . '\\' .
-            $this->getFolder() . '\\' .
-            $this->getVerb() . $this->getSingle() . 'Data';
-
-        $stub = str_replace('{{dataQualifiedName}}', $dataQualifiedName, $stub);
+        $search = [
+            '{{modelKeyName}}',
+            '{{model}}',
+        ];
+        $replace = [
+            $this->getModelKeyName(),
+            $this->getSingle(),
+        ];
+        $stub = str_replace($search, $replace, $stub);
 
         return $this;
     }
 
     protected function getNameInput(): string
     {
-        return $this->getThird() . $this->getSingle();
+        return $this->getDataName();
     }
 
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '\\Contracts\\Actions\\' . $this->getFolder();
+        return $rootNamespace . '\\Data\\' . $this->getFolder();
     }
 
     protected function getPath($name)
     {
-        return $this->laravel['path'] . '/Contracts/Actions/' . $this->getFolder(
-            ) . '/' . $this->getNameInput() . '.php';
+        return $this->laravel['path'] . '/' . 'Data' . '/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }
 }

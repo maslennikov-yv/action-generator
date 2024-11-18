@@ -19,6 +19,7 @@ class LaravelActionsServiceProvider extends ServiceProvider
                 Commands\ActionStubsPublishCommand::class,
                 Commands\ActionMakeCommand::class,
                 Commands\ActionInterfaceMakeCommand::class,
+                Commands\ActionDataMakeCommand::class,
             ]);
         }
     }
