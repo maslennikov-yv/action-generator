@@ -108,7 +108,7 @@ trait HasAction
 
     protected function getRaw(): string
     {
-        return trim($this->getArgs('plural'));
+        return trim($this->getArgs('raw'));
     }
 
     protected function getVerbsAlias(?string $key = null)
