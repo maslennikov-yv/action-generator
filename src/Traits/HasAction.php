@@ -56,7 +56,6 @@ trait HasAction
     protected function replaceData(&$stub): static
     {
         $stub = str_replace('{{data}}', $this->getDataName(), $stub);
-
         return $this;
     }
 
@@ -78,7 +77,6 @@ trait HasAction
     protected function replaceModel(&$stub): static
     {
         $stub = str_replace('{{model}}', $this->getSingle(), $stub);
-
         return $this;
     }
 
@@ -90,7 +88,6 @@ trait HasAction
     protected function replaceId(&$stub): static
     {
         $stub = str_replace('{{id}}', $this->getModelKeyName(), $stub);
-
         return $this;
     }
 
@@ -107,6 +104,45 @@ trait HasAction
     protected function getPlural(): string
     {
         return trim($this->getArgs('plural'));
+    }
+
+    protected function getRaw(): string
+    {
+        return trim($this->getArgs('plural'));
+    }
+
+    protected function getVerbsAlias(?string $key = null)
+    {
+        $verbs = config('action.verbs', [
+            'destroy' => 'Destroy',
+            'update' => 'Update',
+            'show' => 'Show',
+            'create' => 'Create',
+            'index' => 'Index',
+        ]);
+
+        if ($key !== null) {
+            return $verbs[$key] ?? null;
+        }
+
+        return $verbs;
+    }
+
+    protected function getInterfacesAlias(?string $key = null)
+    {
+        $interfaces = config('action.interfaces', [
+            'destroy' => 'Destroys',
+            'update' => 'Updates',
+            'show' => 'Shows',
+            'create' => 'Creates',
+            'index' => 'Indexes',
+        ]);
+
+        if ($key !== null) {
+            return $interfaces[$key] ?? null;
+        }
+
+        return $interfaces;
     }
 
     protected function getFolder(): string
@@ -141,7 +177,40 @@ trait HasAction
             $this->getArgs('dirs') : [];
     }
 
-    private function parseName($name)
+    protected function preProcessVerb(string $verb): array|string
+    {
+        $verb = strtolower($verb);
+        $crud = [
+            'destroy',
+            'update',
+            'show',
+            'create',
+            'index',
+        ];
+        if ($verb === '*') {
+            return $crud;
+        } elseif (str_contains($verb, '+')) {
+            return array_values(
+                array_filter($crud, function ($action) use ($verb) {
+                    return str_contains($verb, mb_substr($action, 0, 1));
+                })
+            );
+        } elseif (str_contains($verb, '-')) {
+            return array_values(
+                array_filter($crud, function ($action) use ($verb) {
+                    return !str_contains($verb, mb_substr($action, 0, 1));
+                })
+            );
+        }
+        return $verb;
+    }
+
+    protected function combineName($verb)
+    {
+        return sprintf($this->getRaw(), $verb);
+    }
+
+    protected function parseName($name)
     {
         $delimiter = false;
         if (Str::contains($name, ['/', '\\'])) {
@@ -149,7 +218,7 @@ trait HasAction
             $delimiter = '/';
         }
 
-        $dirs = false;
+        $dirs = [];
         $action = $name;
         if ($delimiter) {
             $action = Str::afterLast($name, $delimiter);
@@ -163,8 +232,8 @@ trait HasAction
             }
             $matches = Str::ucsplit($action);
             $verb = array_shift($matches);
-            $third = $this->thirdPerson($verb);
-            $single = implode($matches);
+            $third = $this->third($verb);
+            $raw = $single = implode($matches);
             $plural = Str::plural($single);
         } else {
             preg_match_all('/[{](.+?)[}]/', $action, $matches);
@@ -179,21 +248,24 @@ trait HasAction
                     exit(1);
                 }
                 if ($position === 0) {
-                    list($verb, $third) = $this->parseExpression($matches[1][0], [$this, 'thirdPerson']);
-                    $single = Str::chopStart($action, $matches[0][0]);
+                    list($verb, $third) = $this->parseExpression($matches[1][0], [$this, 'third']);
+                    $raw = $single = Str::chopStart($action, $matches[0][0]);
                     $plural = Str::plural($single);
                 } else {
                     list($single, $plural) = $this->parseExpression($matches[1][0], [Str::class, 'plural']);
+                    $raw = $matches[0][0];
                     $verb = Str::chopEnd($action, $matches[0][0]);
-                    $third = $this->thirdPerson($verb);
+                    $third = $this->third($verb);
                 }
             } else {
-                list($verb, $third) = $this->parseExpression($matches[1][0], [$this, 'thirdPerson']);
+                list($verb, $third) = $this->parseExpression($matches[1][0], [$this, 'third']);
                 list($single, $plural) = $this->parseExpression($matches[1][1], [Str::class, 'plural']);
+                $raw = $matches[0][1];
             }
         }
+        $raw = implode('/', array_merge($dirs, ['%s' . $raw]));
 
-        return compact('verb', 'third', 'single', 'plural', 'dirs');
+        return compact('verb', 'third', 'single', 'plural', 'dirs', 'raw');
     }
 
     private function parseExpression(string $expression, callable $cb)
@@ -212,7 +284,13 @@ trait HasAction
         return [$first, $second];
     }
 
-    private function thirdPerson($verb): string
+    /**
+     * Third-person verb form
+     *
+     * @param $verb
+     * @return string
+     */
+    private function third($verb): string
     {
         if (Str::endsWith($verb, 'y')) {
             return Str::replaceMatches('/y$/', 'ies', $verb);

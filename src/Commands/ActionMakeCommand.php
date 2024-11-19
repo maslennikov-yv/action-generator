@@ -89,6 +89,18 @@ class ActionMakeCommand extends GeneratorCommand
         $name = $this->argument('name');
         $this->args = $this->parseName($name);
 
+        $crud = $this->preProcessVerb($this->getVerb());
+        if (is_array($crud)) {
+            foreach ($crud as $verb) {
+                $alias = $this->getVerbsAlias($verb);
+                $this->call('make:action', [
+                    'name' => $this->combineName($alias),
+                    '--force' => (bool)$this->option('force'),
+                ]);
+            }
+            return self::SUCCESS;
+        }
+
         if (parent::handle() === false && !$this->option('force')) {
             return self::FAILURE;
         }
@@ -136,5 +148,9 @@ class ActionMakeCommand extends GeneratorCommand
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists'],
             ['test', null, InputOption::VALUE_NONE, 'Create a DataSet and Test for the action'],
         ];
+    }
+
+    private function pereProcessName()
+    {
     }
 }

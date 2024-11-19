@@ -10,14 +10,14 @@ return [
         'destroy' => 'Destroy',
         'update' => 'Update',
         'show' => 'Show',
-        'store' => 'Create',
+        'create' => 'Create',
         'index' => 'Index',
     ],
     'interfaces' => [
         'destroy' => 'Destroys',
         'update' => 'Updates',
         'show' => 'Shows',
-        'store' => 'Creates',
+        'create' => 'Creates',
         'index' => 'Indexes',
     ],
 ];

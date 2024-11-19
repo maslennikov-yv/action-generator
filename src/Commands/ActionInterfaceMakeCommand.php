@@ -100,7 +100,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
 
     protected function getPath($name)
     {
-        return $this->laravel['path'] . '/Contracts/Actions/' . $this->getFolder(
-            ) . '/' . $this->getNameInput() . '.php';
+        return $this->laravel['path'] . '/Contracts/Actions/' . $this->getFolder() . '/' . $this->getNameInput(
+            ) . '.php';
     }
 }
