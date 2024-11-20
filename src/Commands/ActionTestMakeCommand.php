@@ -104,10 +104,7 @@ class ActionTestMakeCommand extends GeneratorCommand
 
     protected function getNameInput(): string
     {
-        $verb = trim($this->argument('verb'));
-        $model = trim($this->argument(($verb === 'Index') ? 'plural' : 'single'));
-
-        return $verb . $model . 'Test';
+        return $this->getVerb() . $this->getSingle() . 'Test';
     }
 
     protected function getPath($name)
