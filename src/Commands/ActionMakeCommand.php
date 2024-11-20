@@ -95,6 +95,7 @@ class ActionMakeCommand extends GeneratorCommand
                 $alias = $this->getVerbsAlias($verb);
                 $this->call('make:action', [
                     'name' => $this->combineName($alias),
+                    '--test' => (bool)$this->option('test'),
                     '--force' => (bool)$this->option('force'),
                 ]);
             }
@@ -107,6 +108,11 @@ class ActionMakeCommand extends GeneratorCommand
 
         $this->createData();
         $this->createInterface();
+
+        if ($this->option('test')) {
+            $this->createDataset();
+            $this->createTest();
+        }
 
         return self::SUCCESS;
     }
