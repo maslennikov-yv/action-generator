@@ -127,6 +127,22 @@ class ActionMakeCommand extends GeneratorCommand
         ]);
     }
 
+    protected function createDataset()
+    {
+        $this->call('make:action:dataset', [
+            'name' => $this->argument('name'),
+            '--force' => (bool)$this->option('force'),
+        ]);
+    }
+
+    protected function createTest()
+    {
+        $this->call('make:action:test', [
+            'name' => $this->argument('name'),
+            '--force' => (bool)$this->option('force'),
+        ]);
+    }
+
     protected function getNameInput(): string
     {
         return $this->getAction();
@@ -142,15 +158,44 @@ class ActionMakeCommand extends GeneratorCommand
         return $this->laravel['path'] . '/Actions/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }
 
+    protected function preProcessVerb(string $verb): array|string
+    {
+        $verb = strtolower($verb);
+        $crud = [
+            'destroy',
+            'update',
+            'show',
+            'create',
+            'index',
+        ];
+        if ($verb === '*') {
+            return $crud;
+        } elseif (str_contains($verb, '+')) {
+            return array_values(
+                array_filter($crud, function ($action) use ($verb) {
+                    return str_contains($verb, mb_substr($action, 0, 1));
+                })
+            );
+        } elseif (str_contains($verb, '-')) {
+            return array_values(
+                array_filter($crud, function ($action) use ($verb) {
+                    return !str_contains($verb, mb_substr($action, 0, 1));
+                })
+            );
+        }
+        return $verb;
+    }
+
+    protected function combineName($verb)
+    {
+        return sprintf($this->getRaw(), $verb);
+    }
+
     protected function getOptions(): array
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists'],
             ['test', null, InputOption::VALUE_NONE, 'Create a DataSet and Test for the action'],
         ];
-    }
-
-    private function pereProcessName()
-    {
     }
 }

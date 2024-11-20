@@ -60,7 +60,7 @@ class ActionDataMakeCommand extends GeneratorCommand
             }
         }
 
-        return __DIR__ . '/../stubs/action.data.stub';
+        return realpath(__DIR__ . '/../stubs/action.data.stub');
     }
 
     public function handle()

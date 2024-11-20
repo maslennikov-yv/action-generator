@@ -13,6 +13,17 @@ trait HasAction
         return $this->getVerb() . $this->getSingle();
     }
 
+    protected function getActionNamespace(): string
+    {
+        return app()->getNamespace() .
+            $this->makeNamespace([
+                'Actions',
+                ...$this->getDirs(),
+                $this->getPlural(),
+                $this->getInterface(),
+            ]);
+    }
+
     protected function getInterface(): string
     {
         return $this->getThird() . $this->getSingle();
@@ -175,39 +186,6 @@ trait HasAction
     {
         return $this->getArgs('dirs') ?
             $this->getArgs('dirs') : [];
-    }
-
-    protected function preProcessVerb(string $verb): array|string
-    {
-        $verb = strtolower($verb);
-        $crud = [
-            'destroy',
-            'update',
-            'show',
-            'create',
-            'index',
-        ];
-        if ($verb === '*') {
-            return $crud;
-        } elseif (str_contains($verb, '+')) {
-            return array_values(
-                array_filter($crud, function ($action) use ($verb) {
-                    return str_contains($verb, mb_substr($action, 0, 1));
-                })
-            );
-        } elseif (str_contains($verb, '-')) {
-            return array_values(
-                array_filter($crud, function ($action) use ($verb) {
-                    return !str_contains($verb, mb_substr($action, 0, 1));
-                })
-            );
-        }
-        return $verb;
-    }
-
-    protected function combineName($verb)
-    {
-        return sprintf($this->getRaw(), $verb);
     }
 
     protected function parseName($name)

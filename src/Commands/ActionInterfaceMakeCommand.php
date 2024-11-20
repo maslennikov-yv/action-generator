@@ -54,7 +54,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
             }
         }
 
-        return __DIR__ . '/../stubs/action.interface.stub';
+        return realpath(__DIR__ . '/../stubs/action.interface.stub');
     }
 
     public function handle()
