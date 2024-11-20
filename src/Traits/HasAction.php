@@ -119,7 +119,7 @@ trait HasAction
 
     protected function getDatasetKey(): string
     {
-        return Str::snake($this->getModel()) . '.' . Str::snake($this->getVerb());
+        return Str::snake($this->getSingle()) . '.' . Str::snake($this->getVerb());
     }
 
     protected function getDatasetTitle(): string
