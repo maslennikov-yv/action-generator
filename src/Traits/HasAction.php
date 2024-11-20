@@ -20,7 +20,7 @@ trait HasAction
                 'Actions',
                 ...$this->getDirs(),
                 $this->getPlural(),
-                $this->getInterface(),
+                $this->getAction(),
             ]);
     }
 
