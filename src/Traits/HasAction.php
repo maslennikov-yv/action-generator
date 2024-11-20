@@ -117,6 +117,16 @@ trait HasAction
         return trim($this->getArgs('plural'));
     }
 
+    protected function getDatasetKey(): string
+    {
+        return Str::snake($this->getModel()) . '.' . Str::snake($this->getVerb());
+    }
+
+    protected function getDatasetTitle(): string
+    {
+        return sprintf('can %s a %s', $this->getVerb(), $this->getModel());
+    }
+
     protected function getRaw(): string
     {
         return trim($this->getArgs('raw'));

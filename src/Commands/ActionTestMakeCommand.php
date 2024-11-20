@@ -110,16 +110,6 @@ class ActionTestMakeCommand extends GeneratorCommand
         return $verb . $model . 'Test';
     }
 
-    protected function getDatasetKey(): string
-    {
-        return Str::snake($this->getModel()) . '.' . Str::snake($this->getVerb());
-    }
-
-    protected function getDatasetTitle(): string
-    {
-        return sprintf('can %s a %s', $this->getVerb(), $this->getModel());
-    }
-
     protected function getPath($name)
     {
         return base_path('tests') . '/Feature/Actions/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
