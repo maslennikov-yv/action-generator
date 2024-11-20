@@ -13,7 +13,7 @@ class LaravelActionsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('action.php'),
-            ], 'config');
+            ], 'action-config');
 
             $this->commands([
                 Commands\ActionStubsPublishCommand::class,
