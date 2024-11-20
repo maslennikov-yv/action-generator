@@ -5,10 +5,12 @@ namespace Maslennikov\LaravelActions\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 use Maslennikov\LaravelActions\Traits\HasAction;
+use Maslennikov\LaravelActions\Traits\HasImport;
 
 class ActionDatasetMakeCommand extends GeneratorCommand
 {
     use HasAction;
+    use HasImport;
 
     /**
      * The name and signature of the console command.
