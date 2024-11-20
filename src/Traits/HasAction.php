@@ -222,7 +222,13 @@ trait HasAction
         $action = $name;
         if ($delimiter) {
             $action = Str::afterLast($name, $delimiter);
-            $dirs = explode($delimiter, Str::chopStart(Str::chopEnd($name, $delimiter . $action), $delimiter));
+            $dirs = explode(
+                $delimiter,
+                Str::chopStart(
+                    Str::chopEnd($name, $delimiter . $action),
+                    $delimiter
+                )
+            );
         }
 
         if (Str::doesntContain($action, ['{', '}'])) {
