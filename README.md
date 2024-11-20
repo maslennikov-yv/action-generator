@@ -1,4 +1,6 @@
-# action-generator
+# Laravel action generator
+
+Actions - lightweight business logic layer
 
 ## Installation
 
