@@ -20,6 +20,8 @@ class LaravelActionsServiceProvider extends ServiceProvider
                 Commands\ActionMakeCommand::class,
                 Commands\ActionInterfaceMakeCommand::class,
                 Commands\ActionDataMakeCommand::class,
+                Commands\ActionDatasetMakeCommand::class,
+                Commands\ActionTestMakeCommand::class,
             ]);
         }
     }
