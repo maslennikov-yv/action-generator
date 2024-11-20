@@ -124,7 +124,7 @@ trait HasAction
 
     protected function getDatasetTitle(): string
     {
-        return sprintf('can %s a %s', $this->getVerb(), $this->getModel());
+        return sprintf('can %s a %s', $this->getVerb(), $this->getSingle());
     }
 
     protected function getRaw(): string
