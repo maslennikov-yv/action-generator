@@ -95,14 +95,17 @@ class ActionMakeCommand extends GeneratorCommand
                 $verbAlias = $this->getVerbsAlias($verb);
                 $interfaceAlias = $this->getInterfacesAlias($verb);
                 $format = '{%s:%s}{%s:%s}';
-                $name = sprintf(
+                $action = sprintf(
                     $format,
                     $verbAlias,
                     $interfaceAlias,
                     $verb === 'index' ? $this->getPlural() : $this->getSingle(),
                     $this->getPlural(),
                 );
-
+                $name = implode('/', [
+                    ...$this->getDirs(),
+                    $action,
+                ]);
                 $this->call('make:action', [
                     'name' => $this->getFolder($name),
                     '--test' => (bool)$this->option('test'),
