@@ -107,7 +107,7 @@ class ActionMakeCommand extends GeneratorCommand
                     $action,
                 ]);
                 $this->call('make:action', [
-                    'name' => $this->getFolder($name),
+                    'name' => $name,
                     '--test' => (bool)$this->option('test'),
                     '--force' => (bool)$this->option('force'),
                 ]);
