@@ -166,19 +166,21 @@ trait HasAction
         return $interfaces;
     }
 
-    protected function getFolder(): string
+    protected function getFolder(...$parts): string
     {
         return $this->makeFolder([
             ...$this->getDirs(),
             $this->getPlural(),
+            ...$parts
         ]);
     }
 
-    protected function getFolderNamespace(): string
+    protected function getFolderNamespace(...$parts): string
     {
         return $this->makeNamespace([
             ...$this->getDirs(),
             $this->getPlural(),
+            ...$parts
         ]);
     }
 

@@ -92,9 +92,19 @@ class ActionMakeCommand extends GeneratorCommand
         $crud = $this->preProcessVerb($this->getVerb());
         if (is_array($crud)) {
             foreach ($crud as $verb) {
-                $alias = $this->getVerbsAlias($verb);
+                $verbAlias = $this->getVerbsAlias($verb);
+                $interfaceAlias = $this->getInterfacesAlias($verb);
+                $format = '{%s:%s}{%s:%s}';
+                $name = sprintf(
+                    $format,
+                    $verbAlias,
+                    $interfaceAlias,
+                    $verb === 'index' ? $this->getPlural() : $this->getSingle(),
+                    $this->getPlural(),
+                );
+
                 $this->call('make:action', [
-                    'name' => $this->combineName($alias),
+                    'name' => $this->getFolder($name),
                     '--test' => (bool)$this->option('test'),
                     '--force' => (bool)$this->option('force'),
                 ]);
@@ -190,11 +200,6 @@ class ActionMakeCommand extends GeneratorCommand
             );
         }
         return $verb;
-    }
-
-    protected function combineName($verb)
-    {
-        return sprintf($this->getRaw(), $verb);
     }
 
     protected function getOptions(): array
