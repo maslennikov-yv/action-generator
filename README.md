@@ -46,3 +46,5 @@ or:
 ``` php
 php artisan {*}Article --test
 ```
+
+*If you plan to use the --test option, you must install pest:* https://pestphp.com/docs/installation
