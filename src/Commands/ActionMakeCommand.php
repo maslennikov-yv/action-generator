@@ -92,19 +92,15 @@ class ActionMakeCommand extends GeneratorCommand
         $crud = $this->preProcessVerb($this->getVerb());
         if (is_array($crud)) {
             foreach ($crud as $verb) {
-                $verbAlias = $this->getVerbsAlias($verb);
-                $interfaceAlias = $this->getInterfacesAlias($verb);
-                $format = '{%s:%s}{%s:%s}';
-                $action = sprintf(
-                    $format,
-                    $verbAlias,
-                    $interfaceAlias,
-                    $verb === 'index' ? $this->getPlural() : $this->getSingle(),
-                    $this->getPlural(),
-                );
                 $name = implode('/', [
                     ...$this->getDirs(),
-                    $action,
+                    sprintf(
+                        '{%s:%s}{%s:%s}',
+                        $this->getVerbsAlias($verb),
+                        $this->getInterfacesAlias($verb),
+                        $verb === 'index' ? $this->getPlural() : $this->getSingle(),
+                        $this->getPlural(),
+                    ),
                 ]);
                 $this->call('make:action', [
                     'name' => $name,
