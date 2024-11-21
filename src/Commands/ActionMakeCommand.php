@@ -98,7 +98,7 @@ class ActionMakeCommand extends GeneratorCommand
                         '{%s:%s}{%s:%s}',
                         $this->getVerbsAlias($verb),
                         $this->getInterfacesAlias($verb),
-                        $verb === 'index' ? $this->getPlural() : $this->getSingle(),
+                        $this->getSingle(),
                         $this->getPlural(),
                     ),
                 ]);
