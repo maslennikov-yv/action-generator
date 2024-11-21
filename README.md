@@ -39,12 +39,12 @@ php artisan make:action {*}Model --test --force
 For example:
 
 ``` php
-php artisan GetArticle --test
+php artisan make:action GetArticle --test
 ```
 
 or:
 ``` php
-php artisan {*}Article --test
+php artisan make:action {*}Article --test
 ```
 
 *If you plan to use the --test option, you must install pest:* https://pestphp.com/docs/installation
