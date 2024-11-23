@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Maslennikov\LaravelActions\Traits\HasAction;
 use Maslennikov\LaravelActions\Traits\HasImport;
@@ -86,13 +87,15 @@ class ActionMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $name = $this->argument('name');
-        $this->args = $this->parseName($name);
-
+        $this->args = $this->parseName($this->argument('name'));
         $crud = $this->preProcessVerb($this->getVerb());
+        $key = 'make_action_tips_'  . $this->getSingle();
         if (is_array($crud)) {
+
+            Cache::put($key, []);
+
             foreach ($crud as $verb) {
-                $name = implode('/', [
+                $action = implode('/', [
                     ...$this->getDirs(),
                     sprintf(
                         '{%s:%s}{%s:%s}',
@@ -103,11 +106,22 @@ class ActionMakeCommand extends GeneratorCommand
                     ),
                 ]);
                 $this->call('make:action', [
-                    'name' => $name,
+                    'name' => $action,
                     '--test' => (bool)$this->option('test'),
                     '--force' => (bool)$this->option('force'),
                 ]);
             }
+
+            $tips = Cache::pull($key);
+
+            if (is_array($tips)) {
+                $this->info("Don't forget to link the interface to the implementation:");
+                foreach ($tips as $tip) {
+                    $this->comment($tip);
+                }
+                $this->newLine();
+            }
+
             return self::SUCCESS;
         }
 
@@ -121,6 +135,20 @@ class ActionMakeCommand extends GeneratorCommand
         if ($this->option('test')) {
             $this->createDataset();
             $this->createTest();
+        }
+
+        $link = $this->getInterfaceNamespace() . '::class => ' .
+            $this->getActionNamespace() . '::class,';
+
+        $tips = Cache::get($key);
+
+        if (is_array($tips)) {
+            $tips[] = $link;
+            Cache::put($key, $tips);
+        } else {
+            $this->info("Don't forget to link the interface to the implementation:");
+            $this->comment($link);
+            $this->newLine();
         }
 
         return self::SUCCESS;
