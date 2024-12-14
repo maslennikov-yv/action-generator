@@ -289,12 +289,21 @@ trait HasAction
     private function third($verb): string
     {
         if (Str::endsWith($verb, 'y')) {
-            return Str::replaceMatches('/y$/', 'ies', $verb);
+            if ($this->isVowel(Str::substr($verb,-2, 1))) {
+                return $verb . 's';
+            } else {
+                return Str::replaceMatches('/y$/', 'ies', $verb);
+            }
         } elseif (Str::endsWith($verb, ['o', 'ch', 's', 'sh', 'x', 'z'])) {
             return $verb . 'es';
         } else {
             return $verb . 's';
         }
+    }
+
+    private function isVowel($letter): bool
+    {
+        return in_array(strtolower($letter), ['a','e','i','o','u']);
     }
 
     abstract public function getArgs($key = null);
