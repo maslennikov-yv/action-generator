@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Maslennikov\LaravelActions\Exceptions\ActionParseException;
 use Maslennikov\LaravelActions\Traits\HasAction;
 use Maslennikov\LaravelActions\Traits\HasImport;
 
@@ -48,7 +51,7 @@ class ActionTestMakeCommand extends GeneratorCommand
         return $this->args;
     }
 
-    protected function getStub()
+    protected function getStub(): string
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
             $special = $stubsPath . '/action.test.' . Str::snake($this->getVerb()) . '.stub';
@@ -68,12 +71,19 @@ class ActionTestMakeCommand extends GeneratorCommand
     public function handle()
     {
         $name = $this->argument('name');
-        $this->args = $this->parseName($name);
+
+        try {
+            $this->args = $this->parseName($name);
+        } catch (ActionParseException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         return parent::handle();
     }
 
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $stub = $this->files->get($this->getStub());
 
@@ -107,7 +117,7 @@ class ActionTestMakeCommand extends GeneratorCommand
         return $this->getVerb() . $this->getSingle() . 'Test';
     }
 
-    protected function getPath($name)
+    protected function getPath($name): string
     {
         return base_path('tests') . '/Feature/Actions/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }

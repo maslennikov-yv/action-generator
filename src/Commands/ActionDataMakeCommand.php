@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Maslennikov\LaravelActions\Exceptions\ActionParseException;
 use Maslennikov\LaravelActions\Traits\HasAction;
 
 class ActionDataMakeCommand extends GeneratorCommand
@@ -46,7 +49,7 @@ class ActionDataMakeCommand extends GeneratorCommand
         return $this->args;
     }
 
-    protected function getStub()
+    protected function getStub(): string
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
             $special = $stubsPath . '/action.data.' . Str::snake($this->getVerb()) . '.stub';
@@ -66,12 +69,19 @@ class ActionDataMakeCommand extends GeneratorCommand
     public function handle()
     {
         $name = $this->argument('name');
-        $this->args = $this->parseName($name);
+
+        try {
+            $this->args = $this->parseName($name);
+        } catch (ActionParseException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         return parent::handle();
     }
 
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $stub = $this->files->get($this->getStub());
 
@@ -80,7 +90,7 @@ class ActionDataMakeCommand extends GeneratorCommand
             ->replaceClass($stub, $name);
     }
 
-    protected function replaceVars(&$stub)
+    protected function replaceVars(&$stub): static
     {
         $search = [
             '{{modelKeyName}}',
@@ -105,7 +115,7 @@ class ActionDataMakeCommand extends GeneratorCommand
         return $rootNamespace . '\\Data\\' . $this->getFolder();
     }
 
-    protected function getPath($name)
+    protected function getPath($name): string
     {
         return $this->laravel['path'] . '/' . 'Data' . '/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Maslennikov\LaravelActions\Traits;
 
 use Illuminate\Support\Str;
+use Maslennikov\LaravelActions\Exceptions\ActionParseException;
 
 trait HasAction
 {
@@ -223,8 +224,7 @@ trait HasAction
 
         if (Str::doesntContain($action, ['{', '}'])) {
             if (Str::contains($action, ':')) {
-                $this->error('Syntax error near symbol ":"');
-                exit(1);
+                throw new ActionParseException('Syntax error near symbol ":"');
             }
             $matches = Str::ucsplit($action);
             $verb = array_shift($matches);
@@ -234,14 +234,12 @@ trait HasAction
         } else {
             preg_match_all('/[{](.+?)[}]/', $action, $matches);
             if (count($matches[0]) === 0 || count($matches[0]) > 2) {
-                $this->error('Bracket sequence error');
-                exit(1);
+                throw new ActionParseException('Bracket sequence error');
             }
             if (count($matches[0]) === 1) {
                 $position = Str::position($action, $matches[0][0]);
                 if ($position === false) {
-                    $this->error(sprintf('Syntax error near "%s', $matches[0][0]));
-                    exit(1);
+                    throw new ActionParseException(sprintf('Syntax error near "%s"', $matches[0][0]));
                 }
                 if ($position === 0) {
                     list($verb, $third) = $this->parseExpression($matches[1][0], [$this, 'third']);
@@ -274,8 +272,7 @@ trait HasAction
             $first = array_shift($parts);
             $second = array_shift($parts);
         } else {
-            $this->error(sprintf('Syntax error near "%s"', $expression));
-            exit(1);
+            throw new ActionParseException(sprintf('Syntax error near "%s"', $expression));
         }
         return [$first, $second];
     }

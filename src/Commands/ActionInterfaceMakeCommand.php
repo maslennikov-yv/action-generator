@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Maslennikov\LaravelActions\Exceptions\ActionParseException;
 use Maslennikov\LaravelActions\Traits\HasAction;
 
 class ActionInterfaceMakeCommand extends GeneratorCommand
@@ -45,7 +48,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
         return $this->args;
     }
 
-    protected function getStub()
+    protected function getStub(): string
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
             $published = $stubsPath . '/action.interface.stub';
@@ -60,12 +63,19 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
     public function handle()
     {
         $name = $this->argument('name');
-        $this->args = $this->parseName($name);
+
+        try {
+            $this->args = $this->parseName($name);
+        } catch (ActionParseException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         return parent::handle();
     }
 
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $stub = $this->files->get($this->getStub());
 
@@ -98,7 +108,7 @@ class ActionInterfaceMakeCommand extends GeneratorCommand
         return $rootNamespace . '\\Contracts\\Actions\\' . $this->getFolder();
     }
 
-    protected function getPath($name)
+    protected function getPath($name): string
     {
         return $this->laravel['path'] . '/Contracts/Actions/' . $this->getFolder() . '/' . $this->getNameInput(
             ) . '.php';

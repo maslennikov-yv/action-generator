@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Maslennikov\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Maslennikov\LaravelActions\Exceptions\ActionParseException;
 use Maslennikov\LaravelActions\Traits\HasAction;
 use Maslennikov\LaravelActions\Traits\HasImport;
 
@@ -48,7 +51,7 @@ class ActionDatasetMakeCommand extends GeneratorCommand
         return $this->args;
     }
 
-    protected function getStub()
+    protected function getStub(): string
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
             $special = $stubsPath . '/action.dataset.' . Str::snake($this->getVerb()) . '.stub';
@@ -65,20 +68,20 @@ class ActionDatasetMakeCommand extends GeneratorCommand
         return realpath(__DIR__ . '/../stubs/action.dataset.stub');
     }
 
-    protected function getNameInput()
+    protected function getNameInput(): string
     {
         return 'Datasets';
     }
 
-    protected function getPath($name)
+    protected function getPath($name): string
     {
         return base_path('tests') . '/Feature/Actions/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }
 
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $path = $this->getPath($name);
-        $current = file_get_contents($path);
+        $current = $this->files->get($path);
         $stub = $this->files->get($this->getStub());
 
         $this->injectImport($this->getDataNamespace(), $current, str_contains($stub, '{{data}}'))
@@ -124,7 +127,13 @@ class ActionDatasetMakeCommand extends GeneratorCommand
             return false;
         }
 
-        $this->args = $this->parseName($this->argument('name'));
+        try {
+            $this->args = $this->parseName($this->argument('name'));
+        } catch (ActionParseException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         $name = $this->getNameInput();
         $path = $this->getPath($name);

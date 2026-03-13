@@ -7,6 +7,7 @@ namespace Maslennikov\LaravelActions\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Maslennikov\LaravelActions\Exceptions\ActionParseException;
 use Maslennikov\LaravelActions\Traits\HasAction;
 use Maslennikov\LaravelActions\Traits\HasImport;
 use Symfony\Component\Console\Input\InputOption;
@@ -52,7 +53,7 @@ class ActionMakeCommand extends GeneratorCommand
         return $this->args;
     }
 
-    protected function getStub(): bool|string
+    protected function getStub(): string
     {
         if (is_dir($stubsPath = $this->laravel->basePath('stubs'))) {
             $special = $stubsPath . '/action.' . Str::snake($this->getVerb()) . '.stub';
@@ -87,7 +88,13 @@ class ActionMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->args = $this->parseName($this->argument('name'));
+        try {
+            $this->args = $this->parseName($this->argument('name'));
+        } catch (ActionParseException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
         $crud = $this->preProcessVerb($this->getVerb());
         $key = 'make_action_tips_'  . $this->getSingle();
         if (is_array($crud)) {
@@ -196,7 +203,7 @@ class ActionMakeCommand extends GeneratorCommand
         return $rootNamespace . '\\Actions\\' . $this->getFolder();
     }
 
-    protected function getPath($name)
+    protected function getPath($name): string
     {
         return $this->laravel['path'] . '/Actions/' . $this->getFolder() . '/' . $this->getNameInput() . '.php';
     }
