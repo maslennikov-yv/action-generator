@@ -24,6 +24,18 @@ Also, you can publish action stubs:
 php artisan action:stub:publish 
 ```
 
+You can also publish the Cursor skill that helps agents work with this package (generate single Actions or full CRUD stacks with DTOs, contracts and tests):
+
+```bash
+php artisan vendor:publish --tag=action-skill
+```
+
+This will copy the skill into your application at:
+
+- `.cursor/skills/laravel-actions-generator/`
+
+After publishing, Cursor agents working in your Laravel app will automatically use this skill when you ask them to create or modify Actions/CRUD/DTO/tests with this package.
+
 ## Usage
 
 When you need to create an action, just run the following command:

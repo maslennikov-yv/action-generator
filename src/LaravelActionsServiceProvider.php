@@ -15,6 +15,10 @@ class LaravelActionsServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/config.php' => config_path('action.php'),
             ], 'action-config');
 
+            $this->publishes([
+                __DIR__ . '/../.cursor/skills/laravel-actions-generator' => base_path('.cursor/skills/laravel-actions-generator'),
+            ], 'action-skill');
+
             $this->commands([
                 Commands\ActionStubsPublishCommand::class,
                 Commands\ActionMakeCommand::class,
