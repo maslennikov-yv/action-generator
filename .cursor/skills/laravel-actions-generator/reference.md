@@ -1,6 +1,6 @@
 # Laravel Actions Generator – Reference
 
-Краткая справка по ключевым командам и структуре, основанная на исходниках пакета.
+Краткая справка по ключевым командам и структуре, основанная на исходниках пакета. Обязательные соглашения проекта (один публичный метод, один параметр DTO, инжект по интерфейсу, транзакции при нескольких операциях с БД) см. в [.cursor/rules/laravel-actions-business-logic.mdc](.cursor/rules/laravel-actions-business-logic.mdc).
 
 ## Commands overview
 
